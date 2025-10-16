@@ -1,0 +1,27 @@
+# 设置默认行为
+* text=auto
+
+# Solidity 文件始终使用 LF
+*.sol text eol=lf
+
+# 脚本文件使用 LF
+*.sh text eol=lf
+
+# Windows 批处理文件使用 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Markdown 和文档使用 LF（跨平台）
+*.md text eol=lf
+*.txt text eol=lf
+
+# 配置文件使用 LF
+*.toml text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# 二进制文件
+*.png binary
+*.jpg binary
+*.pdf binary
