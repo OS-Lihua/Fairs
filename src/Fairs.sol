@@ -45,19 +45,19 @@ contract Fairs is ERC20, Ownable, ReentrancyGuard {
     // 注意：以下变量经过 Gas 优化打包，存储在同一个槽中以节省 Gas
     
     /// @notice 组织钱包地址，用于接收分配的资金
-    address public organizationAddress;          // 槽 0 (20 字节)
+    address public immutable organizationAddress;          // 槽 0 (20 字节)
     
     /// @notice 投资比例（基点制，10000 = 100%）
     /// @dev 用户购买时，投入资金的百分比进入储备金
-    uint16 public investmentRatio;               // 槽 0 (2 字节)
+    uint16 public immutable investmentRatio;               // 槽 0 (2 字节)
     
     /// @notice 分配比例（基点制，10000 = 100%）
     /// @dev 用于计算组织的资金分配比例
-    uint16 public distributionRatio;             // 槽 0 (2 字节)
+    uint16 public immutable distributionRatio;             // 槽 0 (2 字节)
     // 槽 0 还剩余 8 字节可用于未来扩展
     
     /// @notice 购买曲线斜率 b，公式 B(x) = b * x
-    uint256 public buySlope;                     // 槽 1 (32 字节)
+    uint256 public immutable buySlope;                     // 槽 1 (32 字节)
     
     /// @notice DAT 资金储备（存储在本合约中的 ETH）
     uint256 public tokenReserve;                 // 槽 2 (32 字节)
