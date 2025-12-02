@@ -108,8 +108,8 @@ contract Fairs is ERC20, Ownable, ReentrancyGuard {
         
         // 计算可获得的代币数量: x = sqrt(2c/b + a^2) - a
         // 为避免精度问题，我们重写为: x = sqrt((2c + b*a^2) / b) - a
-        uint256 numerator = 2 * c + b * a * a;
-        uint256 sqrtResult = Math.sqrt(numerator / b);
+        // 使用 Math.mulDiv 避免 b*a^2 溢出: (2c + b*a^2)/b = 2c/b + a^2
+        uint256 sqrtResult = Math.sqrt(Math.mulDiv(2, c, b) + a * a);
         if (sqrtResult <= a) revert InvalidCalculation();
         
         uint256 tokensToMint = sqrtResult - a;
@@ -156,12 +156,12 @@ contract Fairs is ERC20, Ownable, ReentrancyGuard {
         
         // 第一部分: (2Rx/a)(1 - x/(2a))
         // = (2Rx/a) - (Rx²/a²)
-        uint256 term1 = (2 * R * x) / a;
-        uint256 term2 = (R * x * x) / (a * a);
+        uint256 term1 = Math.mulDiv(2 * R, x, a);
+        uint256 term2 = Math.mulDiv(Math.mulDiv(R, x, a), x, a);
         uint256 mainPart = term1 - term2;
         
         // 第二部分: R'/x (R' = rPrime)
-        uint256 burnBonus = rPrime / x;
+        uint256 burnBonus = Math.mulDiv(rPrime, 1, x);
         
         // 总收益 = 主要部分 + 燃烧奖励
         uint256 proceeds = mainPart + burnBonus;
@@ -198,8 +198,8 @@ contract Fairs is ERC20, Ownable, ReentrancyGuard {
         
         // 计算可获得的代币数量: x = sqrt(2c/b + a^2) - a
         // 为避免精度问题，我们重写为: x = sqrt((2c + b*a^2) / b) - a
-        uint256 numerator = 2 * c + b * a * a;
-        uint256 sqrtResult = Math.sqrt(numerator / b);
+        // 使用 Math.mulDiv 避免 b*a^2 溢出
+        uint256 sqrtResult = Math.sqrt(Math.mulDiv(2, c, b) + a * a);
         if (sqrtResult <= a) revert InvalidCalculation();
         
         uint256 tokensToMint = sqrtResult - a;
@@ -229,8 +229,8 @@ contract Fairs is ERC20, Ownable, ReentrancyGuard {
         
         // 计算可获得的代币数量: x = sqrt(2c/b + a^2) - a
         // 为避免精度问题，我们重写为: x = sqrt((2c + b*a^2) / b) - a
-        uint256 numerator = 2 * c + b * a * a;
-        uint256 sqrtResult = Math.sqrt(numerator / b);
+        // 使用 Math.mulDiv 避免 b*a^2 溢出
+        uint256 sqrtResult = Math.sqrt(Math.mulDiv(2, c, b) + a * a);
         if (sqrtResult <= a) revert InvalidCalculation();
         
         uint256 tokensToMint = sqrtResult - a;

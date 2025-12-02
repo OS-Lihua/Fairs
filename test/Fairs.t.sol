@@ -688,8 +688,11 @@ contract FairsTest is Test {
     /// @return 可获得的代币数量
     function _calculateBuyTokens(uint256 c, uint256 a) internal view returns (uint256) {
         uint256 b = fairs.buySlope();
-        uint256 numerator = 2 * c + b * a * a;
-        uint256 sqrtResult = _sqrt(numerator / b);
+        // 更新为新的计算逻辑: sqrt(2c/b + a^2)
+        // 注意：这里为了测试简单，我们尽量模拟合约中的逻辑，但 Solidity 的 Math.mulDiv 处理溢出更好
+        // 在测试辅助函数中，我们假设不会溢出或者简单模拟
+        uint256 term1 = (2 * c) / b;
+        uint256 sqrtResult = _sqrt(term1 + a * a);
         return sqrtResult - a;
     }
     
@@ -705,10 +708,12 @@ contract FairsTest is Test {
         uint256 R,
         uint256 rPrime
     ) internal pure returns (uint256) {
+        // 更新为新的计算逻辑，模拟 Math.mulDiv
         uint256 term1 = (2 * R * x) / a;
-        uint256 term2 = (R * x * x) / (a * a);
+        // term2 = (R * x * x) / (a * a) -> (R * x / a) * x / a
+        uint256 term2 = ((R * x) / a * x) / a;
         uint256 mainPart = term1 - term2;
-        uint256 burnBonus = rPrime > 0 ? rPrime / x : 0;
+        uint256 burnBonus = rPrime > 0 ? rPrime / x : 0; // 测试中保持简单除法，合约中用了 mulDiv(rPrime, 1, x) 也是一样的结果
         return mainPart + burnBonus;
     }
     
